@@ -1,9 +1,11 @@
-﻿namespace DisasterTracker.Data
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DisasterTracker.Data
 {
     public class BaseEntity
     {
         public Guid? Id { get; set; }
-        public DateTimeOffset? CreatedOn { get; set; }
-        public DateTimeOffset? ModifiedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
     }
 }

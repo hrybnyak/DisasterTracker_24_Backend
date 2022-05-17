@@ -1,6 +1,6 @@
-﻿namespace DisasterTracker.Data.Event
+﻿namespace DisasterTracker.Data.Disaster
 {
-    public enum EventType
+    public enum DisasterType
     {
         Unknown,
         Earthquake,
@@ -9,8 +9,9 @@
         Wildfire,
         Flood,
         Landslide,
-        ExtremeTempreture,
+        ExtremeTemperature,
         Drought,
-        Biomedical
+        Biomedical,
+        Tornado
     }
 }

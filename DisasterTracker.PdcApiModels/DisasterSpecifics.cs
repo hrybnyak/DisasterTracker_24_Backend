@@ -60,7 +60,7 @@ namespace DisasterTracker.PdcApiModels
         public List<PopulationAffectedByCountries> Data { get; set; } = new List<PopulationAffectedByCountries>();
     } 
 
-    public class EventSpecifics
+    public class DisasterSpecifics
     {
         public Populations? Populations { get; set; }
         public Aims? Aims { get; set; }

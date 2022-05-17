@@ -53,23 +53,17 @@ namespace DisasterTracker.DataServices.Repository
         public virtual async Task Insert(TEntity entity, bool shouldSave = false)
         {
             entity.Id ??= Guid.NewGuid();
-            entity.CreatedOn ??= DateTimeOffset.Now;
-            entity.ModifiedOn ??= DateTimeOffset.Now;
+            entity.CreatedOn ??= DateTime.UtcNow;
+            entity.ModifiedOn ??= DateTime.UtcNow;
             _entities.Add(entity);
             await SaveChangesIfNeeded(shouldSave);
         }
 
         public virtual async Task Delete(Guid id, bool shouldSave = false)
         {
-            try
-            {
-                TEntity? entityToDelete = _entities.Find(id);
-                await Delete(entityToDelete, shouldSave);
-            }
-            catch
-            {
+            TEntity? entityToDelete = _entities.Find(id);
+            await Delete(entityToDelete, shouldSave);
 
-            }
         }
 
         public virtual async Task Delete(TEntity entityToDelete, bool shouldSave = false)
@@ -84,8 +78,9 @@ namespace DisasterTracker.DataServices.Repository
 
         public virtual async Task Update(TEntity entityToUpdate, bool shouldSave = false)
         {
-            entityToUpdate.ModifiedOn ??= DateTimeOffset.Now;
+            entityToUpdate.ModifiedOn ??= DateTime.UtcNow;
             _entities.Attach(entityToUpdate);
+            var entry = _dbContext.Entry(entityToUpdate);
             _dbContext.Entry(entityToUpdate).State = EntityState.Modified;
             await SaveChangesIfNeeded(shouldSave);
         }

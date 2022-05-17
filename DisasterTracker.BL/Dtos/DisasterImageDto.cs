@@ -1,12 +1,11 @@
-﻿namespace DisasterTracker.Data.Event
+﻿namespace DisasterTracker.BL.Dtos
 {
-    public class EventImage : BaseEntity
+    public class DisasterImageDto
     {
-        public Guid EventId { get; set; }
+        public Guid Id { get; set; }
+        public Guid DisasterId { get; set; }
         public string? MapImageAddress { get; set; }
         public string? InfrastructureMapImageAddress { get; set; }
         public string? OverviewMapImageAddress { get; set; }
-
-        public Event? Event { get; set; }
     }
 }

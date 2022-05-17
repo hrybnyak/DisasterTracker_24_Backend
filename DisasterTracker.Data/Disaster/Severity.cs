@@ -1,4 +1,4 @@
-﻿namespace DisasterTracker.Data.Event
+﻿namespace DisasterTracker.Data.Disaster
 {
     public enum Severity
     {

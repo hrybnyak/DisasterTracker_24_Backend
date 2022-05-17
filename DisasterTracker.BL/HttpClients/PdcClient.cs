@@ -1,4 +1,5 @@
-﻿using DisasterTracker.PdcApiModels;
+﻿using DisasterTracker.BL.Constants;
+using DisasterTracker.PdcApiModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -26,7 +27,7 @@ namespace DisasterTracker.BL.HttpClients
         {
             try
             {
-                var pdcAllHazardBeansAddress = _configuration["PdcAllHazardsAddress"];
+                var pdcAllHazardBeansAddress = _configuration[AddressConfigurationKeys.PdcAllHazardBeansAddressKey];
 
                 var getHazards = await _httpClient.GetAsync(pdcAllHazardBeansAddress);
 
@@ -51,11 +52,11 @@ namespace DisasterTracker.BL.HttpClients
             }
         }
 
-        public async Task<EventHistory?> GetEventHistory(Guid eventId)
+        public async Task<DisasterHistory?> GetEventHistory(Guid eventId)
         {
             try
             {
-                var pdcHazardHistoryAddress = _configuration["PdcHazardHistoryAddress"];
+                var pdcHazardHistoryAddress = _configuration[AddressConfigurationKeys.PdcHazardHistoryAddressKey];
                 pdcHazardHistoryAddress = string.Format(pdcHazardHistoryAddress, eventId);
 
                 var getHistory = await _httpClient.GetAsync(pdcHazardHistoryAddress);
@@ -63,7 +64,7 @@ namespace DisasterTracker.BL.HttpClients
                 if (getHistory.IsSuccessStatusCode)
                 {
                     var result = await getHistory.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<EventHistory>(result);
+                    return JsonConvert.DeserializeObject<DisasterHistory>(result);
                 }
                 else
                 {
@@ -80,7 +81,7 @@ namespace DisasterTracker.BL.HttpClients
             }
         }
 
-        public async Task<EventSpecifics?> GetEventSpecifics(Guid eventId, string updateId)
+        public async Task<DisasterSpecifics?> GetEventSpecifics(Guid eventId, string updateId)
         {
             try
             {
@@ -92,11 +93,11 @@ namespace DisasterTracker.BL.HttpClients
                 if (getEventSpecifics.IsSuccessStatusCode)
                 {
                     var result = await getEventSpecifics.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<EventSpecifics>(result);
+                    return JsonConvert.DeserializeObject<DisasterSpecifics>(result);
                 }
                 else
                 {
-                    _logger.LogError("The request has returned non-successful response. StatusCode : {1}, Reason: {2}",
+                    _logger.LogError("The request has returned non-successful response. StatusCode : {0}, Reason: {1}",
                         getEventSpecifics.StatusCode,
                         getEventSpecifics.ReasonPhrase);
                     throw new HttpRequestException("The request has returned non-successful response.");

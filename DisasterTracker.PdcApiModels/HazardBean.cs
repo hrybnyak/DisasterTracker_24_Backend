@@ -25,19 +25,19 @@ namespace DisasterTracker.PdcApiModels
         public string CommentText { get; set; }
 
         [XmlElement("create_Date_hst")]
-        public DateTimeOffset CreateDateHst { get; set; }
+        public DateTime CreateDateHst { get; set; }
 
         [XmlElement("create_Date")]
-        public DateTimeOffset CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         [XmlElement("creator")]
         public string Creator { get; set; }
 
         [XmlElement("end_Date_hst")]
-        public DateTimeOffset EndDateHst { get; set; }
+        public DateTime EndDateHst { get; set; }
 
         [XmlElement("end_Date")]
-        public DateTimeOffset EndDate { get; set; }
+        public DateTime EndDate { get; set; }
 
         [XmlElement("glide_Uri")]
         public object GlideUri { get; set; }
@@ -49,10 +49,10 @@ namespace DisasterTracker.PdcApiModels
         public string HazardName { get; set; }
 
         [XmlElement("last_Update_hst")]
-        public DateTimeOffset LastUpdateHst { get; set; }
+        public DateTime LastUpdateHst { get; set; }
 
         [XmlElement("last_Update")]
-        public DateTimeOffset LastUpdate { get; set; }
+        public DateTime LastUpdate { get; set; }
 
         [XmlElement("latitude")]
         public decimal Latitude { get; set; }
@@ -76,10 +76,10 @@ namespace DisasterTracker.PdcApiModels
         public string SncUrl { get; set; }
 
         [XmlElement("start_Date_hst")]
-        public DateTimeOffset StartDateHst { get; set; }
+        public DateTime StartDateHst { get; set; }
 
         [XmlElement("start_Date")]
-        public DateTimeOffset StartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         [XmlElement("status")]
         public string Status { get; set; }
@@ -88,10 +88,10 @@ namespace DisasterTracker.PdcApiModels
         public string TypeId { get; set; }
 
         [XmlElement("update_Date_hst")]
-        public DateTimeOffset UpdateDateHst { get; set; }
+        public DateTime UpdateDateHst { get; set; }
 
         [XmlElement("update_Date")]
-        public DateTimeOffset UpdateDate { get; set; }
+        public DateTime UpdateDate { get; set; }
 
         [XmlElement("update_User")]
         public string UpdateUser { get; set; }

@@ -1,8 +1,9 @@
-﻿namespace DisasterTracker.Data.Event
+﻿namespace DisasterTracker.BL.Dtos
 {
-    public class EventStatistics : BaseEntity
+    public class DisasterStatisticsDto
     {
-        public Guid EventId { get; set; }
+        public Guid Id { get; set; }
+        public Guid DisasterId { get; set; }
         public int? Population0_14Affected { get; set; }
         public int? Population15_64Affected { get; set; }
         public int? PopulationAbove65Affected { get; set; }
@@ -12,7 +13,5 @@
         public int? Schools { get; set; }
         public int? Households { get; set; }
         public string? Severity { get; set; }
-
-        public Event? Event { get; set; }
     }
 }

@@ -2,8 +2,9 @@ using DisasterTracker.BL;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
+using System.Net;
 
-
+const string corsPolicy = "allow-all";
 var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
 logger.Debug("Main class initialization");
 
@@ -15,6 +16,9 @@ try
     builder.Logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
     builder.Host.UseNLog();
 
+    builder.WebHost.ConfigureKestrel(o => o.Listen(IPAddress.Any, Convert.ToInt32(Environment.GetEnvironmentVariable("PORT"))));
+
+    builder.Services.AddCors(sa => sa.AddPolicy(corsPolicy, policy => policy.AllowAnyOrigin()));
     builder.Services.AddBusinessLogicServices(builder.Configuration);
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
@@ -34,16 +38,12 @@ try
     });
 
     var app = builder.Build();
-
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
     app.UseHttpsRedirection();
 
+    app.UseCors(corsPolicy);
     app.UseAuthorization();
 
     app.MapControllers();
