@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace DisasterTracker.BL.HttpClients
 {
-    public class PdcClient : IPdcClient
+    internal class PdcClient : IPdcClient
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<PdcClient> _logger;

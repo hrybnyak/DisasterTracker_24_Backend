@@ -21,10 +21,12 @@ namespace DisasterTracker.BL
                 mc.AddProfile<DisasterProfile>();
                 mc.AddProfile<DisasterStatisticsProfile>();
                 mc.AddProfile<DisasterDtosProfile>();
+                mc.AddProfile<UserDtosProfile>();
             });
 
-            serviceCollection.AddScoped<IDisasterCreationService, DisasterCreationService>();
+            serviceCollection.AddScoped<IDisasterRetrievalService, DisasterRetrievalService>();
             serviceCollection.AddScoped<IDisasterService, DisasterService>();
+            serviceCollection.AddScoped<IUserService, UserService>();
             serviceCollection.AddHostedService<TimedUpdateDisastersService>();
         }
     }

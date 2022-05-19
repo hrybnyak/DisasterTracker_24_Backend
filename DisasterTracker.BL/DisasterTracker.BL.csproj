@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.57.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -22,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataServices\DisasterTracker.DataServices.csproj" />
+    <ProjectReference Include="..\DisasterTracker.DataServices\DisasterTracker.DataServices.csproj" />
     <ProjectReference Include="..\DisasterTracker.PdcApiModels\DisasterTracker.PdcApiModels.csproj" />
   </ItemGroup>
 

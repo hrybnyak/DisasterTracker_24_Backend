@@ -4,7 +4,7 @@ using DisasterTracker.PdcApiModels;
 
 namespace DisasterTracker.BL.MapperConfiguration
 {
-    public class DisasterProfile : Profile
+    internal class DisasterProfile : Profile
     {
         public DisasterProfile()
         {

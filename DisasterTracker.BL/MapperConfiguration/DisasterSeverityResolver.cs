@@ -4,7 +4,7 @@ using DisasterTracker.PdcApiModels;
 
 namespace DisasterTracker.BL.MapperConfiguration
 {
-    public class DisasterSeverityResolver : IValueResolver<HazardBean, Disaster, Severity>
+    internal class DisasterSeverityResolver : IValueResolver<HazardBean, Disaster, Severity>
     {
         Severity IValueResolver<HazardBean, Disaster, Severity>.Resolve(HazardBean source, Disaster destination, Severity destMember, ResolutionContext context)
         {

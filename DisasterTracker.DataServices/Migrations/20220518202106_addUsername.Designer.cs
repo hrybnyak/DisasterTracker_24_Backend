@@ -3,6 +3,7 @@ using System;
 using DisasterTracker.DataServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DisasterTracker.DataServices.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220518202106_addUsername")]
+    partial class addUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,65 @@ namespace DisasterTracker.DataServices.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("DisasterTracker.Data.Country.Country", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ISO3")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LongName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Country");
+                });
+
+            modelBuilder.Entity("DisasterTracker.Data.Country.CountryDisaster", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AffectedPopulation")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("DisasterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("DisasterId");
+
+                    b.ToTable("CountryDisaster");
+                });
 
             modelBuilder.Entity("DisasterTracker.Data.Disaster.Disaster", b =>
                 {
@@ -160,6 +221,91 @@ namespace DisasterTracker.DataServices.Migrations
                     b.ToTable("DisasterStatistics");
                 });
 
+            modelBuilder.Entity("DisasterTracker.Data.User.User", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("ReceiveEmails")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("RecievePushNotifications")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("DisasterTracker.Data.User.UserLocation", b =>
+                {
+                    b.Property<Guid?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Distance")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Latitude")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Longitude")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLocation");
+                });
+
+            modelBuilder.Entity("DisasterTracker.Data.Country.CountryDisaster", b =>
+                {
+                    b.HasOne("DisasterTracker.Data.Country.Country", "Country")
+                        .WithMany("Disasters")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DisasterTracker.Data.Disaster.Disaster", "Disaster")
+                        .WithMany("Countries")
+                        .HasForeignKey("DisasterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+
+                    b.Navigation("Disaster");
+                });
+
             modelBuilder.Entity("DisasterTracker.Data.Disaster.DisasterImage", b =>
                 {
                     b.HasOne("DisasterTracker.Data.Disaster.Disaster", "Disaster")
@@ -182,11 +328,34 @@ namespace DisasterTracker.DataServices.Migrations
                     b.Navigation("Disaster");
                 });
 
+            modelBuilder.Entity("DisasterTracker.Data.User.UserLocation", b =>
+                {
+                    b.HasOne("DisasterTracker.Data.User.User", "User")
+                        .WithMany("Locations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DisasterTracker.Data.Country.Country", b =>
+                {
+                    b.Navigation("Disasters");
+                });
+
             modelBuilder.Entity("DisasterTracker.Data.Disaster.Disaster", b =>
                 {
+                    b.Navigation("Countries");
+
                     b.Navigation("DisasterImage");
 
                     b.Navigation("DisasterStatistics");
+                });
+
+            modelBuilder.Entity("DisasterTracker.Data.User.User", b =>
+                {
+                    b.Navigation("Locations");
                 });
 #pragma warning restore 612, 618
         }

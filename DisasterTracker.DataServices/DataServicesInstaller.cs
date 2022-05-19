@@ -13,6 +13,8 @@ namespace DisasterTracker.DataServices
                 options => options.UseNpgsql(configuration.GetConnectionString("ApplicationDbConnectionString")));
 
             serviceCollection.AddScoped<IDisasterRepository, DisasterRepository>();
+            serviceCollection.AddScoped<ICountryRepository, CountryRepository>();
+            serviceCollection.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

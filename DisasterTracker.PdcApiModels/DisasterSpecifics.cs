@@ -45,9 +45,9 @@ namespace DisasterTracker.PdcApiModels
 
     public class PopulationAffectedByCountries
     {
-        public string? Country { get; set; }
+        public string Country { get; set; }
         public int? Year { get; set; }
-        public int? Total { get; set; }
+        public int Total { get; set; }
     }
 
     public class Aims

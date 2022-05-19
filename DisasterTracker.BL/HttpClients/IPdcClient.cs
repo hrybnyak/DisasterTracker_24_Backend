@@ -2,7 +2,7 @@
 
 namespace DisasterTracker.BL.HttpClients
 {
-    public interface IPdcClient
+    internal interface IPdcClient
     {
         Task<HazardBeans?> GetHazardBeans();
         Task<DisasterHistory?> GetEventHistory(Guid eventId);

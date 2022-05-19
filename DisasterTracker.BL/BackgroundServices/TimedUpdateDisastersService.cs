@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DisasterTracker.BL.BackgroundServices
 {
-    public class TimedUpdateDisastersService : BackgroundService
+    internal class TimedUpdateDisastersService : BackgroundService
     {
         private readonly ILogger<TimedUpdateDisastersService> _logger;
         private readonly IServiceProvider _serviceProvider;
@@ -32,7 +32,7 @@ namespace DisasterTracker.BL.BackgroundServices
                 {
                     var scopedProcessingService =
                         scope.ServiceProvider
-                            .GetRequiredService<IDisasterCreationService>();
+                            .GetRequiredService<IDisasterRetrievalService>();
 
                     await scopedProcessingService.CreateOrEditDisasters(stoppingToken);
                 }

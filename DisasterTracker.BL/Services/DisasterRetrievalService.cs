@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DisasterTracker.BL.Constants;
 using DisasterTracker.BL.HttpClients;
+using DisasterTracker.Data.Country;
 using DisasterTracker.Data.Disaster;
 using DisasterTracker.DataServices.Repository;
 using DisasterTracker.PdcApiModels;
@@ -9,29 +10,32 @@ using Microsoft.Extensions.Logging;
 
 namespace DisasterTracker.BL.Services
 {
-    public class DisasterCreationService : IDisasterCreationService
+    internal class DisasterRetrievalService : IDisasterRetrievalService
     {
         private readonly IPdcClient _pdcClient;
-        private readonly ILogger<DisasterCreationService> _logger;
+        private readonly ILogger<DisasterRetrievalService> _logger;
         private readonly IDisasterRepository _disasterRepository;
+        private readonly ICountryRepository _countryRepository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public DisasterCreationService(
+        public DisasterRetrievalService(
             IPdcClient pdcClient,
-            ILogger<DisasterCreationService> logger,
+            ILogger<DisasterRetrievalService> logger,
             IDisasterRepository eventRepository,
             IMapper mapper,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ICountryRepository countryRepository)
         {
             _pdcClient = pdcClient;
             _logger = logger;
             _disasterRepository = eventRepository;
             _mapper = mapper;
             _configuration = configuration;
+            _countryRepository = countryRepository;
         }
 
-        public async Task<List<Disaster>> CreateOrEditDisasters(CancellationToken stoppingToken)
+        public async Task<(List<Disaster>, List<Disaster>)> CreateOrEditDisasters(CancellationToken stoppingToken)
         {
             try
             {
@@ -44,7 +48,7 @@ namespace DisasterTracker.BL.Services
                 }
                 else
                 {
-                    return new List<Disaster>();
+                    return (new List<Disaster>(), new List<Disaster>());
                 }
             }
             catch(Exception ex)
@@ -54,11 +58,12 @@ namespace DisasterTracker.BL.Services
             }
         }
 
-        private async Task<List<Disaster>> CreateOrEditDisasters(List<Disaster> pdcDisasters, CancellationToken stoppingToken)
+        private async Task<(List<Disaster>, List<Disaster>)> CreateOrEditDisasters(List<Disaster> pdcDisasters, CancellationToken stoppingToken)
         {
             try
             {
-                var updatedOrNewDisasters = new List<Disaster>();
+                List<Disaster> updatedDisasters = new();
+                List<Disaster> createdDisasters = new();
                 foreach (var disaster in pdcDisasters)
                 {
                     var disasterEntity = _disasterRepository.GetDisasterByApiId(disaster.ApiId);
@@ -67,18 +72,18 @@ namespace DisasterTracker.BL.Services
                         var updatedDisaster = await EditExistingDisaster(disaster, disasterEntity);
                         if (updatedDisaster != null)
                         {
-                            updatedOrNewDisasters.Add(updatedDisaster);
+                            updatedDisasters.Add(updatedDisaster);
                         }
                     }
                     else
                     {
                         var createdDisaster = await CreateNewDisaster(disaster);
-                        updatedOrNewDisasters.Add(createdDisaster);
+                        createdDisasters.Add(createdDisaster);
                     }
 
                     CheckIfCancellationTokenWasCancelled(stoppingToken);
                 }
-                return updatedOrNewDisasters;
+                return (createdDisasters, updatedDisasters);
             }
             catch (Exception ex)
             {
@@ -133,7 +138,11 @@ namespace DisasterTracker.BL.Services
             var lastUpdateId = await GetDisasterLastUpdateId(disaster);
             disaster.Id = Guid.NewGuid();
             disaster.UpdateId = lastUpdateId;
-            disaster.DisasterStatistics = await GetDisasterStatistics(disaster, lastUpdateId);
+
+            var (statistics, countries) = await GetDisasterStatisticsAndCountries(disaster, lastUpdateId);
+            disaster.DisasterStatistics = statistics;
+            disaster.Countries = countries;
+
             disaster.DisasterImage = BuildEventImage(disaster.ApiId, lastUpdateId);
 
             return disaster;
@@ -144,7 +153,11 @@ namespace DisasterTracker.BL.Services
             var lastUpdateId = await GetDisasterLastUpdateId(disaster);
 
             entity.UpdateId = lastUpdateId;
-            entity.DisasterStatistics = await GetDisasterStatistics(disaster, lastUpdateId);
+
+            var (statistics, countries) = await GetDisasterStatisticsAndCountries(disaster, lastUpdateId);
+            entity.DisasterStatistics = statistics;
+            entity.Countries = countries;
+
             entity.DisasterImage = BuildEventImage(disaster.ApiId, lastUpdateId);
 
             entity.StartDate = disaster.StartDate;
@@ -182,21 +195,21 @@ namespace DisasterTracker.BL.Services
             }
         }
 
-        private async Task<List<DisasterStatistics>> GetDisasterStatistics(Disaster disaster, string? updateId)
+        private async Task<(List<DisasterStatistics>, List<CountryDisaster>)> GetDisasterStatisticsAndCountries(Disaster disaster, string? updateId)
         {
             try
             {
                 if (updateId == null)
                 {
-                    return new List<DisasterStatistics>();
+                    return (new List<DisasterStatistics>(), new List<CountryDisaster>());
                 }
                 var eventDetails = await _pdcClient.GetEventSpecifics(disaster.ApiId, updateId);
-                return BuildDisasterStatisctics(eventDetails);
+                return (BuildDisasterStatisctics(eventDetails), BuildCountryDisasters(eventDetails));
             }
             catch(HttpRequestException ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return new List<DisasterStatistics>();
+                return (new List<DisasterStatistics>(), new List<CountryDisaster>());
             }
         }
 
@@ -216,7 +229,35 @@ namespace DisasterTracker.BL.Services
             return disasterStatistics;
         }
 
-        private DisasterImage? BuildEventImage(Guid apiId, string updateId)
+        private List<CountryDisaster> BuildCountryDisasters(DisasterSpecifics? disasterSpecifics)
+        {
+            var result = new List<CountryDisaster>();
+            var countryPopulationData = disasterSpecifics?.Populations?.Data;
+            
+            if (countryPopulationData != null)
+            {
+                foreach(var countryPopulation in countryPopulationData)
+                {
+                    var country = _countryRepository.GetByName(countryPopulation.Country);
+                    if (country != null && result.All(cd => cd.Country.Id!.Value != country.Id))
+                    {
+                        var countryDisaster = new CountryDisaster
+                        {
+                            CountryId = country.Id!.Value,
+                            AffectedPopulation = countryPopulation.Total,
+                            CreatedOn = DateTime.UtcNow,
+                            ModifiedOn = DateTime.UtcNow
+                        };
+
+                        result.Add(countryDisaster);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private DisasterImage? BuildEventImage(Guid apiId, string? updateId)
         {
             if (updateId == null)
             {

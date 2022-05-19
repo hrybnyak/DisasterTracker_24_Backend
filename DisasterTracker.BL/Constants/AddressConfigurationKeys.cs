@@ -1,6 +1,6 @@
 ﻿namespace DisasterTracker.BL.Constants
 {
-    public static class AddressConfigurationKeys
+    internal static class AddressConfigurationKeys
     {
         public const string PdcAllHazardBeansAddressKey = "PdcAllHazardsAddress";
         public const string PdcHazardHistoryAddressKey = "PdcHazardHistoryAddress";

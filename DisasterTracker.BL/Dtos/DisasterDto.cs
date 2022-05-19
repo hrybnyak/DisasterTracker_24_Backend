@@ -17,5 +17,6 @@ namespace DisasterTracker.BL.Dtos
 
         public IEnumerable<DisasterStatisticsDto> DisasterStatistics { get; set; } = new List<DisasterStatisticsDto>();
         public DisasterImageDto? DisasterImage { get; set; }
+        public IEnumerable<DisasterCountryDto> Countries { get; set; } = new List<DisasterCountryDto>();
     }
 }

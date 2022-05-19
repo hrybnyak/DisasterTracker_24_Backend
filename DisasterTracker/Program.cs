@@ -1,4 +1,5 @@
 using DisasterTracker.BL;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
@@ -18,7 +19,11 @@ try
 
     builder.WebHost.ConfigureKestrel(o => o.Listen(IPAddress.Any, Convert.ToInt32(Environment.GetEnvironmentVariable("PORT"))));
 
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer();
+
     builder.Services.AddCors(sa => sa.AddPolicy(corsPolicy, policy => policy.AllowAnyOrigin()));
+
     builder.Services.AddBusinessLogicServices(builder.Configuration);
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
@@ -38,12 +43,14 @@ try
     });
 
     var app = builder.Build();
+
     app.UseSwagger();
     app.UseSwaggerUI();
 
     app.UseHttpsRedirection();
 
     app.UseCors(corsPolicy);
+
     app.UseAuthorization();
 
     app.MapControllers();

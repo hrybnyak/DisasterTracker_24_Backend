@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using DisasterTracker.Data.Country;
 
 namespace DisasterTracker.Data.Disaster
 {
@@ -19,6 +19,7 @@ namespace DisasterTracker.Data.Disaster
 
         public IEnumerable<DisasterStatistics> DisasterStatistics { get; set; } = new List<DisasterStatistics>();
         public DisasterImage? DisasterImage { get; set; }
+        public IEnumerable<CountryDisaster> Countries { get; set; } = new List<CountryDisaster>();
     }
 }
 

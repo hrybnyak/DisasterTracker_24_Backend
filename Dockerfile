@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["DisasterTracker/DisasterTracker.csproj", "DisasterTracker/"]
 COPY ["DisasterTracker.BL/DisasterTracker.BL.csproj", "DisasterTracker.BL/"]
-COPY ["DataServices/DisasterTracker.DataServices.csproj", "DataServices/"]
+COPY ["DisasterTracker.DataServices/DisasterTracker.DataServices.csproj", "DataServices/"]
 COPY ["DisasterTracker.Data/DisasterTracker.Data.csproj", "DisasterTracker.Data/"]
 COPY ["DisasterTracker.PdcApiModels/DisasterTracker.PdcApiModels.csproj", "DisasterTracker.PdcApiModels/"]
 RUN dotnet restore "DisasterTracker/DisasterTracker.csproj"

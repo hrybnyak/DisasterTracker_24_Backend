@@ -9,8 +9,8 @@ namespace DisasterTracker.DataServices.Repository
         private readonly ILogger<DisasterRepository> _logger;
 
         public DisasterRepository(
-            ApplicationDbContext context, 
-            ILogger<DisasterRepository> logger) 
+            ApplicationDbContext context,
+            ILogger<DisasterRepository> logger)
             : base(context)
         {
             _logger = logger;
@@ -39,14 +39,14 @@ namespace DisasterTracker.DataServices.Repository
             try
             {
                 var now = DateTime.UtcNow;
-                var weekAgo = now.AddDays(-7);
+                var dayAgo = now.AddDays(-1);
 
-                var result = _entities.Where(d => d.EndDate >= now || d.LastUpdateDate >= weekAgo)
+                var result = _entities.Where(d => d.EndDate >= now || d.LastUpdateDate >= dayAgo)
                     .ToList();
-                
+
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 throw;
@@ -60,11 +60,13 @@ namespace DisasterTracker.DataServices.Repository
                 var result = _entities
                     .Include(d => d.DisasterStatistics)
                     .Include(d => d.DisasterImage)
+                    .Include(d => d.Countries)
+                        .ThenInclude(d => d.Country)
                     .FirstOrDefault(d => d.Id == id);
 
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 throw;

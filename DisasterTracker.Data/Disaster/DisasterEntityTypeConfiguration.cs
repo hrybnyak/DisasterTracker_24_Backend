@@ -29,6 +29,10 @@ namespace DisasterTracker.Data.Disaster
                 .WithOne(ei => ei.Disaster)
                 .HasForeignKey<DisasterImage>(e => e.DisasterId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(e => e.Countries)
+                .WithOne(c => c.Disaster)
+                .HasForeignKey(c => c.DisasterId);
         }
     }
 }
