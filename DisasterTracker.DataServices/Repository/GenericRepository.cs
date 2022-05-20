@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace DisasterTracker.DataServices.Repository
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity>
+    internal class GenericRepository<TEntity> : IGenericRepository<TEntity>
         where TEntity : BaseEntity
     {
         protected ApplicationDbContext _dbContext;

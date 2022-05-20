@@ -1,5 +1,6 @@
 ﻿using DisasterTracker.Data.Country;
 using DisasterTracker.Data.Disaster;
+using DisasterTracker.Data.EmailTemplate;
 using DisasterTracker.Data.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,7 @@ namespace DisasterTracker.DataServices
         public DbSet<CountryDisaster> CountryDisaster { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<UserLocation> UserLocation { get; set; }
+        public DbSet<EmailTemplate> EmailTemplate { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -29,6 +31,7 @@ namespace DisasterTracker.DataServices
             new CountryDisasterEntityTypeConfiguration().Configure(modelBuilder.Entity<CountryDisaster>());
             new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
             new UserLocationEntityTypeConfiguration().Configure(modelBuilder.Entity<UserLocation>());
+            new EmailTemplateEntityTypeConfiguration().Configure(modelBuilder.Entity<EmailTemplate>());
         }
 
     }

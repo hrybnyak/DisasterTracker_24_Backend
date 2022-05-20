@@ -3,6 +3,7 @@ using System;
 using DisasterTracker.DataServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DisasterTracker.DataServices.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220519175507_user-update")]
+    partial class userupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,31 +219,6 @@ namespace DisasterTracker.DataServices.Migrations
                     b.HasIndex("DisasterId");
 
                     b.ToTable("DisasterStatistics");
-                });
-
-            modelBuilder.Entity("DisasterTracker.Data.EmailTemplate.EmailTemplate", b =>
-                {
-                    b.Property<Guid?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("HtmlTemplate")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmailTemplate");
                 });
 
             modelBuilder.Entity("DisasterTracker.Data.User.User", b =>

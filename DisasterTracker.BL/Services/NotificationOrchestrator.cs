@@ -1,23 +1,21 @@
 ﻿using AutoMapper;
 using DisasterTracker.BL.Dtos;
 using DisasterTracker.BL.Extensions;
-using DisasterTracker.Data.Disaster;
-using DisasterTracker.Data.User;
 using DisasterTracker.DataServices.Repository;
 using Microsoft.Extensions.Logging;
 
 namespace DisasterTracker.BL.Services
 {
-    internal class UserDistanceCalculationService
+    internal class NotificationOrchestrator : INotificationOrchestrator
     {
-        private readonly ILogger<UserService> _logger;
+        private readonly ILogger<NotificationOrchestrator> _logger;
         private readonly IUserRepository _userRepository;
         private readonly INotificationService _notificationService;
         private readonly IDisasterRetrievalService _disasterCreationService;
         private readonly IMapper _mapper;
 
-        public UserDistanceCalculationService(
-            ILogger<UserService> logger, 
+        public NotificationOrchestrator(
+            ILogger<NotificationOrchestrator> logger, 
             IUserRepository userRepository, 
             INotificationService notificationService, 
             IDisasterRetrievalService disasterCreationService, 

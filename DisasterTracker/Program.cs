@@ -1,4 +1,6 @@
 using DisasterTracker.BL;
+using DisasterTracker.BL.Services.EmailNotification;
+using DisasterTracker.BL.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using NLog;
@@ -19,10 +21,16 @@ try
 
     builder.WebHost.ConfigureKestrel(o => o.Listen(IPAddress.Any, Convert.ToInt32(Environment.GetEnvironmentVariable("PORT"))));
 
+    builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer();
 
-    builder.Services.AddCors(sa => sa.AddPolicy(corsPolicy, policy => policy.AllowAnyOrigin()));
+    builder.Services.AddCors(sa => sa.AddPolicy(corsPolicy, policy => {
+        policy.AllowAnyOrigin();
+        policy.AllowAnyMethod();
+        policy.AllowAnyHeader();
+    }));
 
     builder.Services.AddBusinessLogicServices(builder.Configuration);
     builder.Services.AddControllers();
@@ -54,6 +62,7 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
+    app.MapHub<DisasterNotificationHub>("/DisasterNotification");
 
     app.Run();
 }

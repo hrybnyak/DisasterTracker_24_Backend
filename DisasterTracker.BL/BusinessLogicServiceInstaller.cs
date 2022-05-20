@@ -5,6 +5,9 @@ using DisasterTracker.BL.MapperConfiguration;
 using DisasterTracker.DataServices;
 using DisasterTracker.BL.Services;
 using DisasterTracker.BL.BackgroundServices;
+using Microsoft.AspNetCore.SignalR;
+using DisasterTracker.BL.SignalR;
+using DisasterTracker.BL.Services.EmailNotification;
 
 namespace DisasterTracker.BL
 {
@@ -12,6 +15,9 @@ namespace DisasterTracker.BL
     {
         public static void AddBusinessLogicServices(this IServiceCollection serviceCollection, IConfigurationRoot configuration)
         {
+            serviceCollection.AddSignalR();
+            serviceCollection.AddSingleton<IUserIdProvider, UserIdProvider>();
+
             serviceCollection.AddDataServices(configuration);
 
             serviceCollection.AddHttpClient<IPdcClient, PdcClient>();
@@ -27,7 +33,15 @@ namespace DisasterTracker.BL
             serviceCollection.AddScoped<IDisasterRetrievalService, DisasterRetrievalService>();
             serviceCollection.AddScoped<IDisasterService, DisasterService>();
             serviceCollection.AddScoped<IUserService, UserService>();
-            serviceCollection.AddHostedService<TimedUpdateDisastersService>();
+
+            serviceCollection.AddScoped<ISignalRNotificationService, SignalRNotificationService>();
+            serviceCollection.AddScoped<IMailService, MailService>();
+            serviceCollection.AddScoped<IMailNotificationService, MailNotificationService>();
+
+            serviceCollection.AddScoped<INotificationService, NotificationService>();
+            serviceCollection.AddScoped<INotificationOrchestrator, NotificationOrchestrator>();
+
+            serviceCollection.AddHostedService<TimedUpdateOnDisastersService>();
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DisasterTracker.DataServices.Repository
 {
-    public class DisasterRepository : GenericRepository<Disaster>, IDisasterRepository
+    internal class DisasterRepository : GenericRepository<Disaster>, IDisasterRepository
     {
         private readonly ILogger<DisasterRepository> _logger;
 
@@ -23,6 +23,8 @@ namespace DisasterTracker.DataServices.Repository
                 var result = _entities
                     .Include(d => d.DisasterImage)
                     .Include(d => d.DisasterStatistics)
+                    .Include(d => d.Countries)
+                        .ThenInclude(d => d.Country)
                     .FirstOrDefault(d => d.ApiId == apiId);
 
                 return result;

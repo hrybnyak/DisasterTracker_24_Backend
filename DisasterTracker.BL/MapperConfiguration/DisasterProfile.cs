@@ -15,7 +15,8 @@ namespace DisasterTracker.BL.MapperConfiguration
                 .ForMember(e => e.StartDate, opt => opt.MapFrom(hb => DateTime.SpecifyKind(hb.StartDate, DateTimeKind.Utc)))
                 .ForMember(e => e.EndDate, opt => opt.MapFrom(hb => DateTime.SpecifyKind(hb.EndDate, DateTimeKind.Utc)))
                 .ForMember(e => e.Type, opt => opt.MapFrom(new DisasterTypeResolver()))
-                .ForMember(e => e.Severity, opt => opt.MapFrom(new DisasterSeverityResolver()));
+                .ForMember(e => e.Severity, opt => opt.MapFrom(new DisasterSeverityResolver()))
+                .ForMember(e => e.Description, opt => opt.MapFrom(hb => hb.Description.Replace("DisasterAWARE", "Disaster Tracker")));
         }
     }
 }

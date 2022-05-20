@@ -156,6 +156,7 @@ namespace DisasterTracker.BL.Services
 
             var (statistics, countries) = await GetDisasterStatisticsAndCountries(disaster, lastUpdateId);
             entity.DisasterStatistics = statistics;
+            
             entity.Countries = countries;
 
             entity.DisasterImage = BuildEventImage(disaster.ApiId, lastUpdateId);
@@ -239,7 +240,7 @@ namespace DisasterTracker.BL.Services
                 foreach(var countryPopulation in countryPopulationData)
                 {
                     var country = _countryRepository.GetByName(countryPopulation.Country);
-                    if (country != null && result.All(cd => cd.Country.Id!.Value != country.Id))
+                    if (country != null && result.All(cd => cd.CountryId != country.Id))
                     {
                         var countryDisaster = new CountryDisaster
                         {

@@ -71,7 +71,7 @@ namespace DisasterTracker.BL.Services
                     return null;
                 }
 
-                entity.RecievePushNotifications = entityMapped.RecievePushNotifications;
+                entity.ReceivePushNotifications = entityMapped.ReceivePushNotifications;
                 entity.ReceiveEmails = entityMapped.ReceiveEmails;
                 entity.Email = entityMapped.Email;
                 UpdateUserLocations(entity, entityMapped);
@@ -98,15 +98,20 @@ namespace DisasterTracker.BL.Services
                         entityLocation.Distance = location.Distance;
                         entityLocation.Latitude = location.Latitude;
                         entityLocation.Longitude = location.Longitude;
+                        entityLocation.ModifiedOn = DateTime.UtcNow;
                     }
                     else
                     {
                         location.Id = null;
+                        location.CreatedOn = DateTime.UtcNow;
+                        location.ModifiedOn = DateTime.UtcNow;
                         entity.Locations.Add(location);
                     }
                 }
                 else
                 {
+                    location.CreatedOn = DateTime.UtcNow;
+                    location.ModifiedOn = DateTime.UtcNow;
                     entity.Locations.Add(location);
                 }
             }
@@ -125,7 +130,7 @@ namespace DisasterTracker.BL.Services
                     Id = Guid.NewGuid(),
                     Email = createUserDto.Email,
                     UserName = createUserDto.UserName,
-                    RecievePushNotifications = false,
+                    ReceivePushNotifications = false,
                     ReceiveEmails = false
                 };
                 await _userRepository.Insert(entity, true);

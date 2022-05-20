@@ -12,6 +12,9 @@
         ExtremeTemperature,
         Drought,
         Biomedical,
-        Tornado
+        Tornado,
+        Cyclone,
+        WinterStorm,
+        Tsunami
     }
 }

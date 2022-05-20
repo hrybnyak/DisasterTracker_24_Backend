@@ -6,7 +6,7 @@ namespace DisasterTracker.Data.User
     {
         public string Email { get; set; }
         public string? UserName { get; set; }
-        public bool RecievePushNotifications { get; set; }
+        public bool ReceivePushNotifications { get; set; }
         public bool ReceiveEmails { get; set; }
 
         public List<UserLocation> Locations { get; set; } = new List<UserLocation>();

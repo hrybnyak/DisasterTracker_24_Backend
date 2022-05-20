@@ -5,13 +5,13 @@ using Microsoft.Extensions.Logging;
 
 namespace DisasterTracker.BL.BackgroundServices
 {
-    internal class TimedUpdateDisastersService : BackgroundService
+    internal class TimedUpdateOnDisastersService : BackgroundService
     {
-        private readonly ILogger<TimedUpdateDisastersService> _logger;
+        private readonly ILogger<TimedUpdateOnDisastersService> _logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public TimedUpdateDisastersService(
-            ILogger<TimedUpdateDisastersService> logger, 
+        public TimedUpdateOnDisastersService(
+            ILogger<TimedUpdateOnDisastersService> logger, 
             IServiceProvider serviceProvider)
         {
             _logger = logger;
@@ -32,9 +32,9 @@ namespace DisasterTracker.BL.BackgroundServices
                 {
                     var scopedProcessingService =
                         scope.ServiceProvider
-                            .GetRequiredService<IDisasterRetrievalService>();
+                            .GetRequiredService<INotificationOrchestrator>();
 
-                    await scopedProcessingService.CreateOrEditDisasters(stoppingToken);
+                    await scopedProcessingService.CoordinateUserNotification(stoppingToken);
                 }
                 
                 await Task.Delay(TimeSpan.FromHours(2), stoppingToken);

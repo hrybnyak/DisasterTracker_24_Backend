@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DisasterTracker.DataServices.Repository
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    internal class UserRepository : GenericRepository<User>, IUserRepository
     {
         private readonly ILogger<UserRepository> _logger;
 
@@ -21,7 +21,7 @@ namespace DisasterTracker.DataServices.Repository
             try
             {
                 var result = _entities
-                    .Include(u => u.Locations)
+                    .Include(u => u.Locations.OrderBy(l => l.CreatedOn))
                     .FirstOrDefault(d => d.Id == id);
 
                 return result;
@@ -58,7 +58,7 @@ namespace DisasterTracker.DataServices.Repository
             {
                 var result = _entities
                     .Include(u => u.Locations)
-                    .Where(u => u.RecievePushNotifications || u.ReceiveEmails)
+                    .Where(u => u.ReceivePushNotifications || u.ReceiveEmails)
                     .ToList();
 
                 return result;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DisasterTracker.DataServices.Repository
 {
-    public class CountryRepository : GenericRepository<Country>, ICountryRepository
+    internal class CountryRepository : GenericRepository<Country>, ICountryRepository
     {
         private readonly ILogger<CountryRepository> _logger;
 
