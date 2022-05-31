@@ -6,8 +6,10 @@ using DisasterTracker.DataServices;
 using DisasterTracker.BL.Services;
 using DisasterTracker.BL.BackgroundServices;
 using Microsoft.AspNetCore.SignalR;
-using DisasterTracker.BL.SignalR;
+using DisasterTracker.BL.Services.SignalR;
 using DisasterTracker.BL.Services.EmailNotification;
+using DisasterTracker.BL.Services.PushNotification;
+using Lib.Net.Http.WebPush;
 
 namespace DisasterTracker.BL
 {
@@ -28,11 +30,18 @@ namespace DisasterTracker.BL
                 mc.AddProfile<DisasterStatisticsProfile>();
                 mc.AddProfile<DisasterDtosProfile>();
                 mc.AddProfile<UserDtosProfile>();
+                mc.AddProfile<PushSubscriptionProfile>();
             });
 
+            serviceCollection.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+            serviceCollection.Configure<PushNotificationsOptions>(configuration.GetSection("PushNotifications"));
+
+            serviceCollection.AddHttpClient<PushServiceClient>();
             serviceCollection.AddScoped<IDisasterRetrievalService, DisasterRetrievalService>();
             serviceCollection.AddScoped<IDisasterService, DisasterService>();
             serviceCollection.AddScoped<IUserService, UserService>();
+            serviceCollection.AddScoped<IPushSubscriptionService, PushSubscriptionService>();
+            serviceCollection.AddScoped<IPushNotificationService, PushNotificationService>();
 
             serviceCollection.AddScoped<ISignalRNotificationService, SignalRNotificationService>();
             serviceCollection.AddScoped<IMailService, MailService>();

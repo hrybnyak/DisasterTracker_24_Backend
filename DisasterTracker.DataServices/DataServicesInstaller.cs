@@ -16,6 +16,7 @@ namespace DisasterTracker.DataServices
             serviceCollection.AddScoped<ICountryRepository, CountryRepository>();
             serviceCollection.AddScoped<IUserRepository, UserRepository>();
             serviceCollection.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
+            serviceCollection.AddScoped<IUserPushSubscriptionRepository, UserPushSubscriptionRepository>();
         }
     }
 }

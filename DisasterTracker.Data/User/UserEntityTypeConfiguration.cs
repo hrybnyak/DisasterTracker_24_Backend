@@ -11,7 +11,13 @@ namespace DisasterTracker.Data.User
 
             builder.HasMany(u => u.Locations)
                 .WithOne(ul => ul.User)
-                .HasForeignKey(ul => ul.UserId);
+                .HasForeignKey(ul => ul.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(u => u.UserPushSubscriptions)
+                .WithOne(ps => ps.User)
+                .HasForeignKey(ps => ps.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

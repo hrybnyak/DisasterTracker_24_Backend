@@ -39,7 +39,7 @@ namespace DisasterTracker.DataServices.Repository
                 try
                 {
                     var result = _entities
-                        .Include(u => u.Locations)
+                        .Include(u => u.Locations.OrderBy(l => l.CreatedOn))
                         .SingleOrDefault(d => d.Email == email);
 
                     return result;

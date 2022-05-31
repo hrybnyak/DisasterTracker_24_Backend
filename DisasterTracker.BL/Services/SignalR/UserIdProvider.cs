@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace DisasterTracker.BL.SignalR
+namespace DisasterTracker.BL.Services.SignalR
 {
     internal class UserIdProvider : IUserIdProvider
     {

@@ -1,6 +1,6 @@
 using DisasterTracker.BL;
 using DisasterTracker.BL.Services.EmailNotification;
-using DisasterTracker.BL.SignalR;
+using DisasterTracker.BL.Services.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using NLog;
@@ -21,16 +21,15 @@ try
 
     builder.WebHost.ConfigureKestrel(o => o.Listen(IPAddress.Any, Convert.ToInt32(Environment.GetEnvironmentVariable("PORT"))));
 
-    builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer();
 
-    builder.Services.AddCors(sa => sa.AddPolicy(corsPolicy, policy => {
-        policy.AllowAnyOrigin();
-        policy.AllowAnyMethod();
-        policy.AllowAnyHeader();
-    }));
+    builder.Services.AddCors(sa => sa.AddPolicy(corsPolicy, policy => 
+        policy.WithOrigins("https://disaster-tracker-24.herokuapp.com", "http://localhost:3000")
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()
+    ));
 
     builder.Services.AddBusinessLogicServices(builder.Configuration);
     builder.Services.AddControllers();

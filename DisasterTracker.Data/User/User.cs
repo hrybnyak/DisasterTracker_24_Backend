@@ -10,5 +10,6 @@ namespace DisasterTracker.Data.User
         public bool ReceiveEmails { get; set; }
 
         public List<UserLocation> Locations { get; set; } = new List<UserLocation>();
+        public List<UserPushSubscription> UserPushSubscriptions = new List<UserPushSubscription>();
     }
 }

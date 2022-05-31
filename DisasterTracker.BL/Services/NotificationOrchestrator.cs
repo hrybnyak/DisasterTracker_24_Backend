@@ -71,6 +71,7 @@ namespace DisasterTracker.BL.Services
                 CheckIfCancellationTokenWasCancelled(stoppingToken);
                 Parallel.ForEach(users, async (user) =>
                 {
+                    
                     foreach (var userLocation in user.Locations)
                     {
                         foreach (var disaster in disasters)

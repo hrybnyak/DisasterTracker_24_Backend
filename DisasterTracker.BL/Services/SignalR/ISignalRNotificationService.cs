@@ -1,8 +1,8 @@
 ﻿using DisasterTracker.BL.Dtos;
 
-namespace DisasterTracker.BL.SignalR
+namespace DisasterTracker.BL.Services.SignalR
 {
-    internal interface ISignalRNotificationService
+    public interface ISignalRNotificationService
     {
         Task NotifyAboutNewDisaster(UserDto userDto, UserLocationDto userLocation, DisasterDto disaster);
         Task NotifyAboutUpdatedDisaster(UserDto userDto, UserLocationDto userLocation, DisasterDto disaster);

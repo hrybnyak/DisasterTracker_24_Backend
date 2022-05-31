@@ -16,6 +16,8 @@ namespace DisasterTracker.DataServices
         public DbSet<User> User { get; set; }
         public DbSet<UserLocation> UserLocation { get; set; }
         public DbSet<EmailTemplate> EmailTemplate { get; set; }
+        public DbSet<UserPushSubscription> UserPushSubscription { get; set; }
+        public DbSet<PushSubscriptionKey> PushSubscriptionKey { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -32,6 +34,8 @@ namespace DisasterTracker.DataServices
             new UserEntityTypeConfiguration().Configure(modelBuilder.Entity<User>());
             new UserLocationEntityTypeConfiguration().Configure(modelBuilder.Entity<UserLocation>());
             new EmailTemplateEntityTypeConfiguration().Configure(modelBuilder.Entity<EmailTemplate>());
+            new UserPushSubscriptionEntityTypeConfiguration().Configure(modelBuilder.Entity<UserPushSubscription>());
+            new PushSubscriptionKeyEntityTypeConfiguration().Configure(modelBuilder.Entity<PushSubscriptionKey>());
         }
 
     }

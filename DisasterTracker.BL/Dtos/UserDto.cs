@@ -8,7 +8,7 @@ namespace DisasterTracker.BL.Dtos
 
         [EmailAddress]
         public string Email { get; set; }
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         public bool ReceivePushNotifications { get; set; }
         public bool ReceiveEmails { get; set; }

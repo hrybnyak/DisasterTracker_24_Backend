@@ -3,6 +3,7 @@ using System;
 using DisasterTracker.DataServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DisasterTracker.DataServices.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220530203551_addPushNotifications")]
+    partial class addPushNotifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,7 +364,8 @@ namespace DisasterTracker.DataServices.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("UserPushSubscription");
                 });
@@ -433,8 +436,8 @@ namespace DisasterTracker.DataServices.Migrations
             modelBuilder.Entity("DisasterTracker.Data.User.UserPushSubscription", b =>
                 {
                     b.HasOne("DisasterTracker.Data.User.User", "User")
-                        .WithMany("UserPushSubscriptions")
-                        .HasForeignKey("UserId")
+                        .WithOne("UserPushSubscription")
+                        .HasForeignKey("DisasterTracker.Data.User.UserPushSubscription", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -459,7 +462,7 @@ namespace DisasterTracker.DataServices.Migrations
                 {
                     b.Navigation("Locations");
 
-                    b.Navigation("UserPushSubscriptions");
+                    b.Navigation("UserPushSubscription");
                 });
 
             modelBuilder.Entity("DisasterTracker.Data.User.UserPushSubscription", b =>

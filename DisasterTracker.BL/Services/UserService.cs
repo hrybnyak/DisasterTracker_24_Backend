@@ -74,6 +74,7 @@ namespace DisasterTracker.BL.Services
                 entity.ReceivePushNotifications = entityMapped.ReceivePushNotifications;
                 entity.ReceiveEmails = entityMapped.ReceiveEmails;
                 entity.Email = entityMapped.Email;
+                entity.ModifiedOn = DateTime.UtcNow;
                 UpdateUserLocations(entity, entityMapped);
 
                 await _userRepository.Update(entity, true);
@@ -98,6 +99,8 @@ namespace DisasterTracker.BL.Services
                         entityLocation.Distance = location.Distance;
                         entityLocation.Latitude = location.Latitude;
                         entityLocation.Longitude = location.Longitude;
+                        entityLocation.Label = location.Label;
+                        entityLocation.Title = location.Title;
                         entityLocation.ModifiedOn = DateTime.UtcNow;
                     }
                     else
@@ -131,7 +134,9 @@ namespace DisasterTracker.BL.Services
                     Email = createUserDto.Email,
                     UserName = createUserDto.UserName,
                     ReceivePushNotifications = false,
-                    ReceiveEmails = false
+                    ReceiveEmails = false,
+                    CreatedOn = DateTime.UtcNow,
+                    ModifiedOn = DateTime.UtcNow
                 };
                 await _userRepository.Insert(entity, true);
                 return GetUserById(entity.Id.Value)!;

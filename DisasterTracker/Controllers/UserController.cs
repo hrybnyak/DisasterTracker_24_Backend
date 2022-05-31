@@ -2,6 +2,7 @@
 using DisasterTracker.BL.Services;
 using DisasterTracker.Filters;
 using Google.Apis.Auth;
+using Lib.Net.Http.WebPush;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DisasterTracker.Controllers
@@ -13,16 +14,19 @@ namespace DisasterTracker.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
+        private readonly IPushSubscriptionService _pushSubscriptionService;
         private readonly IConfiguration _configuration;
 
         public UserController(
             ILogger<UserController> logger, 
             IUserService userService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IPushSubscriptionService pushSubscriptionService)
         {
             _logger = logger;
             _userService = userService;
             _configuration = configuration;
+            _pushSubscriptionService = pushSubscriptionService;
         }
 
         [HttpGet("{id}")]
@@ -74,6 +78,50 @@ namespace DisasterTracker.Controllers
             {
                 var user = await _userService.UpdateUser(id, updateUserDto);
                 return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        [HttpPost("{id}/pushSubscription")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddSubscriptionToUser(Guid id, [FromBody]PushSubscription pushSubscription)
+        {
+            try
+            {
+                await _pushSubscriptionService.AddPushSubscriptionToUser(id, pushSubscription);
+                return Ok();
+            }
+            catch(ArgumentException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+
+        [HttpDelete("{id}/pushSubscription")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteSubscription(Guid id)
+        {
+            try
+            {
+                await _pushSubscriptionService.DeleteSubscription(id);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
